@@ -4,12 +4,12 @@ import { normalizeSearchTerm } from "@/lib/normalize";
 import { CACHE_TTL_HOURS, SCRAPER_TIMEOUT_MS } from "@/lib/constants";
 import type { SearchResponse } from "@/lib/types";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 export async function POST(request: NextRequest) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
   try {
     const body = await request.json();
     const { remedio, cep } = body;

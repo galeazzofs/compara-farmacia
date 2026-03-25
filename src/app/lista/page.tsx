@@ -8,6 +8,7 @@ import ComparisonTable, {
 } from "@/components/ComparisonTable";
 import CepInput from "@/components/CepInput";
 import type { ShoppingList } from "@/lib/types";
+import Disclaimer from "@/components/Disclaimer";
 
 // ─── Inner page (rendered after AuthGuard) ───────────────────────────────────
 
@@ -440,6 +441,7 @@ function ListaPageContent() {
                     Comparação de preços
                   </h3>
                   <ComparisonTable comparison={comparison} />
+                  <Disclaimer />
                 </div>
               )}
             </div>

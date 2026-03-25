@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { Suspense, useEffect, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import SearchBar from "@/components/SearchBar";
 import LoadingSearch from "@/components/LoadingSearch";
 import ResultsList from "@/components/ResultsList";
 import type { SearchResponse } from "@/lib/types";
+import Disclaimer from "@/components/Disclaimer";
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export default function ResultadosPage() {
+function ResultadosContent() {
   const searchParams = useSearchParams();
   const remedio = searchParams.get("remedio") ?? "";
   const cep = searchParams.get("cep") ?? "";
@@ -162,8 +163,23 @@ export default function ResultadosPage() {
             )}
           </>
         )}
+        <Disclaimer />
       </div>
     </main>
+  );
+}
+
+export default function ResultadosPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex flex-1 items-center justify-center px-4 py-16">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-teal-600 border-t-transparent" />
+        </main>
+      }
+    >
+      <ResultadosContent />
+    </Suspense>
   );
 }
 
