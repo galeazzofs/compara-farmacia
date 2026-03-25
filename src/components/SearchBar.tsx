@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import CepInput from "./CepInput";
+import PhotoUpload from "./PhotoUpload";
+import OcrConfirmation from "./OcrConfirmation";
+import { OcrResult } from "@/lib/types";
 
 interface SearchBarProps {
   initialRemedio?: string;
@@ -18,6 +21,7 @@ export default function SearchBar({
   const [cep, setCep] = useState(initialCep);
   const [remedioError, setRemedioError] = useState("");
   const [cepError, setCepError] = useState("");
+  const [ocrResult, setOcrResult] = useState<OcrResult | null>(null);
 
   function validate() {
     let valid = true;
@@ -48,71 +52,83 @@ export default function SearchBar({
     router.push(`/resultados?${params.toString()}`);
   }
 
+  function handleOcrResult(result: OcrResult) {
+    setOcrResult(result);
+  }
+
+  function handleOcrConfirm(remedios: string[]) {
+    setOcrResult(null);
+    const cepClean = cep.replace(/\D/g, "");
+
+    if (remedios.length === 1) {
+      const params = new URLSearchParams({ remedio: remedios[0], cep: cepClean });
+      router.push(`/resultados?${params.toString()}`);
+    } else {
+      // Multiple medicines: search for the first one for now
+      // Future: offer shopping list creation
+      const params = new URLSearchParams({ remedio: remedios[0], cep: cepClean });
+      router.push(`/resultados?${params.toString()}`);
+    }
+  }
+
+  function handleOcrCancel() {
+    setOcrResult(null);
+  }
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="w-full flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-2"
-      noValidate
-    >
-      {/* Medicine name input */}
-      <div className="flex flex-col gap-1 flex-1">
-        <input
-          type="text"
-          placeholder="Nome do remédio (ex: Dipirona 500mg)"
-          value={remedio}
-          onChange={(e) => setRemedio(e.target.value)}
-          aria-label="Nome do remédio"
-          className={[
-            "h-12 w-full rounded-xl border bg-white px-4 text-sm text-gray-800 outline-none transition-all",
-            "placeholder:text-gray-400",
-            "focus:ring-2 focus:ring-teal-500 focus:border-teal-500",
-            remedioError
-              ? "border-red-400 focus:ring-red-400 focus:border-red-400"
-              : "border-gray-200",
-          ].join(" ")}
+    <>
+      {/* OCR confirmation modal */}
+      {ocrResult && (
+        <OcrConfirmation
+          result={ocrResult}
+          onConfirm={handleOcrConfirm}
+          onCancel={handleOcrCancel}
         />
-        {remedioError && (
-          <p className="text-xs text-red-500 font-medium pl-1">{remedioError}</p>
-        )}
-      </div>
+      )}
 
-      {/* CEP input */}
-      <div className="sm:w-44">
-        <CepInput value={cep} onChange={setCep} error={cepError} />
-      </div>
-
-      {/* Camera placeholder button */}
-      <button
-        type="button"
-        disabled
-        title="Em breve: busca por foto da receita"
-        aria-label="Busca por foto (em breve)"
-        className="hidden sm:flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-dashed border-gray-300 text-gray-400 cursor-not-allowed transition-colors hover:border-teal-300 hover:text-teal-400"
+      <form
+        onSubmit={handleSubmit}
+        className="w-full flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-2"
+        noValidate
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
+        {/* Medicine name input */}
+        <div className="flex flex-col gap-1 flex-1">
+          <input
+            type="text"
+            placeholder="Nome do remédio (ex: Dipirona 500mg)"
+            value={remedio}
+            onChange={(e) => setRemedio(e.target.value)}
+            aria-label="Nome do remédio"
+            className={[
+              "h-12 w-full rounded-xl border bg-white px-4 text-sm text-gray-800 outline-none transition-all",
+              "placeholder:text-gray-400",
+              "focus:ring-2 focus:ring-teal-500 focus:border-teal-500",
+              remedioError
+                ? "border-red-400 focus:ring-red-400 focus:border-red-400"
+                : "border-gray-200",
+            ].join(" ")}
+          />
+          {remedioError && (
+            <p className="text-xs text-red-500 font-medium pl-1">{remedioError}</p>
+          )}
+        </div>
+
+        {/* CEP input */}
+        <div className="sm:w-44">
+          <CepInput value={cep} onChange={setCep} error={cepError} />
+        </div>
+
+        {/* Photo upload (replaces disabled camera placeholder) */}
+        <PhotoUpload onResult={handleOcrResult} />
+
+        {/* Search button */}
+        <button
+          type="submit"
+          className="h-12 shrink-0 rounded-xl bg-teal-600 px-6 text-sm font-semibold text-white transition-all hover:bg-teal-700 active:scale-95 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 sm:w-auto w-full"
         >
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-          <circle cx="12" cy="13" r="4" />
-        </svg>
-      </button>
-
-      {/* Search button */}
-      <button
-        type="submit"
-        className="h-12 shrink-0 rounded-xl bg-teal-600 px-6 text-sm font-semibold text-white transition-all hover:bg-teal-700 active:scale-95 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 sm:w-auto w-full"
-      >
-        Comparar preços
-      </button>
-    </form>
+          Comparar preços
+        </button>
+      </form>
+    </>
   );
 }
