@@ -74,27 +74,15 @@ export default function ResultCard({ result, rank }: ResultCardProps) {
         {result.nome_produto}
       </p>
 
-      {/* Price breakdown */}
-      <div className="flex flex-col gap-1.5 rounded-xl bg-navy-50/60 px-4 py-3">
-        <div className="flex items-center justify-between text-sm text-navy-400">
-          <span>Remedio</span>
-          <span className="text-navy-600 font-medium">{formatBRL(result.preco_remedio)}</span>
-        </div>
-        <div className="flex items-center justify-between text-sm text-navy-400">
-          <span>Frete</span>
-          <span className={result.frete === 0 ? "text-brand-600 font-semibold" : "text-navy-600 font-medium"}>
-            {result.frete === 0 ? "Gratis" : formatBRL(result.frete)}
-          </span>
-        </div>
-        <div className="mt-1.5 flex items-center justify-between border-t border-navy-200/50 pt-2">
-          <span className="text-sm font-semibold text-navy-500">Total</span>
-          <span className={[
-            "text-2xl font-extrabold font-[var(--font-display)] tracking-tight",
-            isBestPrice ? "text-brand-600" : "text-navy-900",
-          ].join(" ")}>
-            {formatBRL(result.preco_total)}
-          </span>
-        </div>
+      {/* Price */}
+      <div className="flex items-center justify-between rounded-xl bg-navy-50/60 px-4 py-3">
+        <span className="text-sm font-semibold text-navy-500">Preco</span>
+        <span className={[
+          "text-2xl font-extrabold font-[var(--font-display)] tracking-tight",
+          isBestPrice ? "text-brand-600" : "text-navy-900",
+        ].join(" ")}>
+          {formatBRL(result.preco_remedio)}
+        </span>
       </div>
 
       {/* CTA */}

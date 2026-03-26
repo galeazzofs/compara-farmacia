@@ -3,7 +3,6 @@ export const FARMACIAS = [
   { id: "drogaraia", nome: "Droga Raia", cor: "#00A651" },
   { id: "paguemenos", nome: "Pague Menos", cor: "#003DA5" },
   { id: "drogariasaopaulo", nome: "Drogaria São Paulo", cor: "#D4213D" },
-  { id: "panvel", nome: "Panvel", cor: "#0066B3" },
 ] as const;
 
 export const PRAZO_THRESHOLDS = {

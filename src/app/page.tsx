@@ -32,7 +32,7 @@ export default function Home() {
 
           {/* Subtitle */}
           <p className="animate-fade-in-up delay-200 max-w-md text-base text-navy-400 sm:text-lg leading-relaxed">
-            Compare precos com frete incluso nas maiores farmacias do Brasil.
+            Compare precos nas maiores farmacias do Brasil em segundos.
             Rapido, gratuito e em tempo real.
           </p>
 
@@ -71,8 +71,8 @@ export default function Home() {
                   <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
                 </svg>
               }
-              title="Frete incluso"
-              description="Preco total com frete para o seu CEP. Sem surpresas."
+              title="Direto da fonte"
+              description="Precos extraidos diretamente dos sites oficiais das farmacias."
               delay="delay-200"
             />
             <Feature

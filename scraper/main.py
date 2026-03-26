@@ -5,7 +5,6 @@ from scrapers.drogasil import DrogasilScraper
 from scrapers.drogaraia import DrogaRaiaScraper
 from scrapers.paguemenos import PagueMenosScraper
 from scrapers.drogariasaopaulo import DrogariaSaoPauloScraper
-from scrapers.panvel import PanvelScraper
 
 app = FastAPI(title="ComparaFarmacia Scraper")
 
@@ -40,7 +39,6 @@ SCRAPERS = [
     DrogaRaiaScraper(),
     PagueMenosScraper(),
     DrogariaSaoPauloScraper(),
-    PanvelScraper(),
 ]
 
 

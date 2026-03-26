@@ -20,7 +20,7 @@ const sora = Sora({
 export const metadata: Metadata = {
   title: "ComparaFarmácia — Encontre o menor preço de remédios",
   description:
-    "Compare preços de medicamentos com frete incluso nas maiores farmácias do Brasil: Drogasil, Droga Raia, Pague Menos, Drogaria São Paulo e Panvel.",
+    "Compare preços de medicamentos nas maiores farmácias do Brasil: Drogasil, Droga Raia, Pague Menos e Drogaria São Paulo.",
   keywords: ["farmácia", "remédio", "comparar preço", "medicamento", "frete"],
 };
 
