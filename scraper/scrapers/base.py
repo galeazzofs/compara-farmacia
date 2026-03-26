@@ -30,6 +30,7 @@ class BaseScraper(ABC):
         self._last_request_time = time.monotonic()
 
     async def _get(self, url: str, params: dict = None, retries: int = 2) -> httpx.Response:
+        """Standard GET using httpx (for open APIs like VTEX)."""
         await self._rate_limit()
         last_error = None
         for attempt in range(retries + 1):
@@ -43,6 +44,27 @@ class BaseScraper(ABC):
                     response.raise_for_status()
                     return response
             except (httpx.HTTPStatusError, httpx.RequestError) as e:
+                last_error = e
+                if attempt < retries:
+                    await asyncio.sleep(2 ** attempt)
+        raise last_error
+
+    async def _get_impersonate(self, url: str, retries: int = 2) -> str:
+        """GET using curl_cffi with Chrome TLS impersonation (for anti-bot sites)."""
+        from curl_cffi import requests as curl_requests
+
+        await self._rate_limit()
+        last_error = None
+        for attempt in range(retries + 1):
+            try:
+                response = curl_requests.get(
+                    url,
+                    impersonate="chrome",
+                    timeout=REQUEST_TIMEOUT,
+                )
+                response.raise_for_status()
+                return response.text
+            except Exception as e:
                 last_error = e
                 if attempt < retries:
                     await asyncio.sleep(2 ** attempt)
