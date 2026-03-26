@@ -1,49 +1,22 @@
 from typing import Optional
-from bs4 import BeautifulSoup
 from scrapers.base import BaseScraper
-from scrapers._price_parser import parse_price
 
 
 class DrogasilScraper(BaseScraper):
+    """Drogasil scraper — currently blocked by Akamai anti-bot protection.
+
+    Their GraphQL API at /api/next/busca/graphql requires browser-level
+    cookies and bot detection tokens that cannot be replicated from a server.
+    This scraper returns None until we can find an alternative approach
+    (e.g., partnership API or headless browser with stealth plugins).
+    """
+
     @property
     def name(self) -> str:
         return "drogasil"
 
     async def search(self, remedio: str, cep: str) -> Optional[dict]:
-        url = f"https://www.drogasil.com.br/search?w={remedio}"
-        response = await self._get(url)
-        soup = BeautifulSoup(response.text, "lxml")
-
-        product = soup.select_one(
-            "[data-testid='product-card'], .product-card, .product-item, .item-product"
-        )
-        if not product:
-            return None
-
-        nome_el = product.select_one(
-            "[data-testid='product-name'], .product-name, .product-title, h2, h3"
-        )
-        price_el = product.select_one(
-            "[data-testid='product-price'], .product-price, .price, .preco"
-        )
-        link_el = product.select_one("a[href]")
-
-        nome_produto = nome_el.get_text(strip=True) if nome_el else remedio
-        preco_remedio = parse_price(price_el.get_text(strip=True)) if price_el else 0.0
-        url_produto = link_el["href"] if link_el else url
-        if url_produto and not url_produto.startswith("http"):
-            url_produto = "https://www.drogasil.com.br" + url_produto
-
-        frete = 0.0
-        prazo_dias = -1
-        preco_total = preco_remedio + frete
-
-        return {
-            "farmacia": self.name,
-            "nome_produto": nome_produto,
-            "preco_remedio": preco_remedio,
-            "frete": frete,
-            "preco_total": preco_total,
-            "prazo_dias": prazo_dias,
-            "url_produto": url_produto,
-        }
+        # Drogasil uses Akamai anti-bot protection that blocks server requests.
+        # Their GraphQL API requires browser-specific tokens.
+        # TODO: Investigate headless browser with stealth or partner API.
+        raise Exception("Drogasil indisponível — proteção anti-bot ativa")

@@ -1,49 +1,46 @@
 from typing import Optional
-from bs4 import BeautifulSoup
 from scrapers.base import BaseScraper
-from scrapers._price_parser import parse_price
 
 
 class DrogariaSaoPauloScraper(BaseScraper):
+    """Scraper using VTEX Intelligent Search REST API."""
+
     @property
     def name(self) -> str:
         return "drogariasaopaulo"
 
     async def search(self, remedio: str, cep: str) -> Optional[dict]:
-        url = f"https://www.drogariasaopaulo.com.br/search?w={remedio}"
-        response = await self._get(url)
-        soup = BeautifulSoup(response.text, "lxml")
+        url = "https://www.drogariasaopaulo.com.br/api/io/_v/api/intelligent-search/product_search/trade-policy/1"
+        params = {"query": remedio, "count": 5, "page": 1}
+        response = await self._get(url, params=params)
+        data = response.json()
 
-        product = soup.select_one(
-            "[data-testid='product-card'], .product-card, .product-item, .item-product"
-        )
-        if not product:
+        products = data.get("products", [])
+        if not products:
             return None
 
-        nome_el = product.select_one(
-            "[data-testid='product-name'], .product-name, .product-title, h2, h3"
-        )
-        price_el = product.select_one(
-            "[data-testid='product-price'], .product-price, .price, .preco"
-        )
-        link_el = product.select_one("a[href]")
+        product = products[0]
+        nome_produto = product.get("productName", remedio)
+        link = product.get("link", "")
+        url_produto = f"https://www.drogariasaopaulo.com.br{link}" if link else url
 
-        nome_produto = nome_el.get_text(strip=True) if nome_el else remedio
-        preco_remedio = parse_price(price_el.get_text(strip=True)) if price_el else 0.0
-        url_produto = link_el["href"] if link_el else url
-        if url_produto and not url_produto.startswith("http"):
-            url_produto = "https://www.drogariasaopaulo.com.br" + url_produto
+        price_range = product.get("priceRange", {})
+        selling = price_range.get("sellingPrice", {})
+        preco_remedio = selling.get("lowPrice", 0.0)
+
+        if preco_remedio == 0.0:
+            return None
 
         frete = 0.0
         prazo_dias = -1
         preco_total = preco_remedio + frete
 
         return {
-            "farmacia": self.name,
+            "farmacia": "Drogaria São Paulo",
             "nome_produto": nome_produto,
-            "preco_remedio": preco_remedio,
+            "preco_remedio": round(preco_remedio, 2),
             "frete": frete,
-            "preco_total": preco_total,
+            "preco_total": round(preco_total, 2),
             "prazo_dias": prazo_dias,
             "url_produto": url_produto,
         }
