@@ -27,19 +27,20 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-100 bg-white/90 backdrop-blur-md shadow-sm">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+    <header className="sticky top-0 z-50 w-full border-b border-navy-200/60 bg-white/70 backdrop-blur-xl">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center gap-2 group"
+          className="flex items-center gap-2.5 group"
           aria-label="ComparaFarmácia — página inicial"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-600 text-white font-bold text-sm shadow-sm group-hover:bg-teal-700 transition-colors">
-            CF
+          <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-navy-900 text-white font-bold text-xs tracking-wider shadow-sm group-hover:shadow-md transition-all duration-300 overflow-hidden">
+            <span className="relative z-10">CF</span>
+            <div className="absolute inset-0 bg-gradient-to-br from-brand-500 to-brand-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
-          <span className="font-bold text-gray-900 text-lg tracking-tight">
-            Compara<span className="text-teal-600">Farmácia</span>
+          <span className="font-[var(--font-display)] font-bold text-navy-900 text-lg tracking-tight">
+            Compara<span className="text-gradient">Farmácia</span>
           </span>
         </Link>
 
@@ -51,13 +52,13 @@ export default function Header() {
                 <>
                   <Link
                     href="/lista"
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+                    className="rounded-lg px-3 py-1.5 text-sm font-medium text-navy-500 hover:text-navy-900 hover:bg-navy-50 transition-all duration-200"
                   >
                     Minhas Listas
                   </Link>
                   <Link
                     href="/perfil"
-                    className="ml-1 flex h-9 w-9 items-center justify-center rounded-full bg-teal-50 text-teal-700 font-semibold text-sm hover:bg-teal-100 transition-colors"
+                    className="ml-1 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-brand-400 to-brand-600 text-white font-semibold text-xs shadow-sm hover:shadow-md hover:scale-105 transition-all duration-200"
                     aria-label="Meu perfil"
                     title="Meu perfil"
                   >
@@ -67,7 +68,7 @@ export default function Header() {
               ) : (
                 <Link
                   href="/login"
-                  className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition-colors"
+                  className="rounded-full bg-navy-900 px-5 py-2 text-sm font-semibold text-white hover:bg-navy-800 active:scale-95 transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Entrar
                 </Link>

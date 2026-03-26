@@ -64,8 +64,6 @@ export default function SearchBar({
       const params = new URLSearchParams({ remedio: remedios[0], cep: cepClean });
       router.push(`/resultados?${params.toString()}`);
     } else {
-      // Multiple medicines: search for the first one for now
-      // Future: offer shopping list creation
       const params = new URLSearchParams({ remedio: remedios[0], cep: cepClean });
       router.push(`/resultados?${params.toString()}`);
     }
@@ -77,7 +75,6 @@ export default function SearchBar({
 
   return (
     <>
-      {/* OCR confirmation modal */}
       {ocrResult && (
         <OcrConfirmation
           result={ocrResult}
@@ -88,45 +85,46 @@ export default function SearchBar({
 
       <form
         onSubmit={handleSubmit}
-        className="w-full flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-2"
+        className="glass-card w-full rounded-2xl p-2 flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-1.5"
         noValidate
       >
         {/* Medicine name input */}
         <div className="flex flex-col gap-1 flex-1">
           <input
             type="text"
-            placeholder="Nome do remédio (ex: Dipirona 500mg)"
+            placeholder="Nome do remedio (ex: Dipirona 500mg)"
             value={remedio}
             onChange={(e) => setRemedio(e.target.value)}
             aria-label="Nome do remédio"
             className={[
-              "h-12 w-full rounded-xl border bg-white px-4 text-sm text-gray-800 outline-none transition-all",
-              "placeholder:text-gray-400",
-              "focus:ring-2 focus:ring-teal-500 focus:border-teal-500",
-              remedioError
-                ? "border-red-400 focus:ring-red-400 focus:border-red-400"
-                : "border-gray-200",
+              "h-11 w-full rounded-xl border-0 bg-transparent px-4 text-sm text-navy-800 outline-none transition-all",
+              "placeholder:text-navy-300",
+              "focus:bg-white focus:ring-2 focus:ring-brand-400/40",
+              remedioError ? "ring-2 ring-red-400/40 bg-red-50/50" : "",
             ].join(" ")}
           />
           {remedioError && (
-            <p className="text-xs text-red-500 font-medium pl-1">{remedioError}</p>
+            <p className="text-xs text-red-500 font-medium pl-3">{remedioError}</p>
           )}
         </div>
 
+        {/* Divider */}
+        <div className="hidden sm:block w-px h-8 bg-navy-200/50 self-center" />
+
         {/* CEP input */}
-        <div className="sm:w-44">
+        <div className="sm:w-40">
           <CepInput value={cep} onChange={setCep} error={cepError} />
         </div>
 
-        {/* Photo upload (replaces disabled camera placeholder) */}
+        {/* Photo upload */}
         <PhotoUpload onResult={handleOcrResult} />
 
         {/* Search button */}
         <button
           type="submit"
-          className="h-12 shrink-0 rounded-xl bg-teal-600 px-6 text-sm font-semibold text-white transition-all hover:bg-teal-700 active:scale-95 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 sm:w-auto w-full"
+          className="h-11 shrink-0 rounded-xl bg-brand-500 px-6 text-sm font-bold text-white transition-all hover:bg-brand-600 hover:shadow-lg hover:shadow-brand-500/20 active:scale-95 focus:outline-none focus:ring-2 focus:ring-brand-400 focus:ring-offset-2 sm:w-auto w-full"
         >
-          Comparar preços
+          Comparar precos
         </button>
       </form>
     </>

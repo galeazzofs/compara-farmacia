@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { DM_Sans, Sora } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 
-const inter = Inter({
-  variable: "--font-inter",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -22,10 +30,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-gray-50 font-sans text-gray-900">
+    <html lang="pt-BR" className={`${dmSans.variable} ${sora.variable} h-full antialiased`}>
+      <body className="noise-overlay min-h-full flex flex-col mesh-bg font-sans text-navy-900">
         <Header />
-        <div className="flex flex-1 flex-col">{children}</div>
+        <div className="flex flex-1 flex-col relative z-10">{children}</div>
       </body>
     </html>
   );
